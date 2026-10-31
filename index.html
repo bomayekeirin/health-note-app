@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff0f5"><meta name="description" content="食べたものを楽しく記録する、やさしい食事ノート">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>おいしい食事ノート</title>
+<style>
+:root{--pink:#f4a9c4;--pink-dark:#d96f98;--pink-pale:#fff0f5;--cream:#fffaf1;--mint:#e8f5ed;--lav:#f1edff;--ink:#514653;--muted:#8d808a;--line:#f0dce5;--white:#fff;--shadow:0 8px 24px #8d53600d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff8fb,#fffdf8 45%,#f8fcfa);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{padding:26px 18px 19px;text-align:center;background:linear-gradient(135deg,#ffe5ef,#fff3e4 65%,#eaf7ef);border-radius:0 0 30px 30px}
+.brand{font-size:12px;letter-spacing:.12em;color:#a77e90;font-weight:800}.logo{font-size:27px;font-weight:900;margin:4px 0}.subtitle{font-size:12px;color:var(--muted)}
+main{max-width:900px;margin:auto;padding:13px 14px 90px}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;position:sticky;top:0;z-index:5;padding:10px 0;background:#fffaf7eF;backdrop-filter:blur(10px)}
+nav button{border:0;border-radius:15px;padding:11px 3px;background:#f8edf2;color:#765d69;font-size:12px;font-weight:800}
+nav button.active{background:var(--pink);color:white;box-shadow:0 4px 12px #e79ab544}
+.panel{display:none}.panel.active{display:block}
+.card{background:white;border:1px solid var(--line);border-radius:22px;padding:16px;margin:10px 0;box-shadow:var(--shadow)}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:15px;margin:16px 0 9px}
+.hello{background:linear-gradient(130deg,#fff0f5,#fff9ef);border:0;padding:19px}.hello h2{font-size:21px}
+.muted,.hint{font-size:12px;line-height:1.7;color:var(--muted)}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#fff7fa;border-radius:16px;padding:12px;text-align:center}.stat b{display:block;font-size:21px;color:#bd7894}.stat span{font-size:11px;color:var(--muted)}
+.row{display:flex;gap:9px;align-items:end}.row>*{flex:1;min-width:0}
+label{display:block;font-size:12px;font-weight:800;margin:11px 0 5px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#fff;color:var(--ink);outline-color:var(--pink)}
+textarea{min-height:75px;resize:vertical}
+.btn{border:0;border-radius:14px;padding:11px 15px;background:#f6e7ee;color:#755667;font-weight:800}
+.btn.primary{background:var(--pink);color:white}.btn.ghost{background:#f5f1ff;color:#6f6490}.btn.full{width:100%;margin-top:12px}
+.categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.cat{border:1px solid var(--line);border-radius:17px;background:white;padding:13px;text-align:left;color:var(--ink);min-height:78px}
+.cat.active{border:2px solid var(--pink);background:var(--pink-pale)}
+.cat .emoji{font-size:22px;float:right}.cat b{display:block;font-size:13px}.cat small{font-size:11px;color:var(--muted)}
+.foodgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.food{border:1px solid var(--line);border-radius:15px;background:#fff;padding:11px;text-align:left;color:var(--ink);min-height:74px}
+.food.selected{border:2px solid var(--pink);background:var(--pink-pale)}
+.food b{display:block;font-size:13px}.food small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.chip{display:inline-block;border-radius:30px;padding:4px 9px;background:var(--mint);font-size:11px;color:#5d8870}
+.result{background:var(--cream);border-radius:17px;padding:13px;margin-top:13px}
+.selected-row{display:grid;grid-template-columns:1fr 86px 35px;gap:7px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.selected-row:last-child{border:0}.selected-row b{font-size:12px}.selected-row small{display:block;color:var(--muted);font-size:10px}
+.selected-row input{padding:8px;font-size:12px}.remove{border:0;background:#f9e9ef;color:#a45f7b;border-radius:10px;padding:8px}
+.entry{border-bottom:1px solid var(--line);padding:13px 0}.entry:last-child{border:0}
+.entryhead{display:flex;justify-content:space-between;gap:8px;align-items:center}.entry ul{margin:8px 0;padding-left:20px;font-size:13px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.day{background:#faf5f8;border-radius:12px;text-align:center;padding:9px 2px}.day b{display:block;font-size:12px}.day span{font-size:10px;color:var(--muted)}
+.ai-box{background:#f8f5ff;border:1px solid #e8e0ff;border-radius:17px;padding:13px}.candidate{display:flex;width:100%;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:12px;background:white;padding:10px;margin-top:7px;color:var(--ink);text-align:left}
+footer{text-align:center;font-size:10px;color:var(--muted);padding:22px 10px}
+.hidden{display:none!important}
+@media(min-width:650px){.categories{grid-template-columns:repeat(3,1fr)}.foodgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.heroGrid{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}.card{padding:19px}}
+</style>
+</head>
+<body>
+<header><div class="brand">MY LITTLE FOOD DIARY</div><div class="logo" id="appTitle">おいしい食事ノート 🌷</div><div class="subtitle">食べたものを、たのしく・自分らしく記録しよう</div></header>
+<main>
+<nav><button class="active" data-tab="home">🏠 ホーム</button><button data-tab="add">🍙 記録する</button><button data-tab="list">📖 日記</button><button data-tab="settings">⚙️ 設定</button></nav>
+<section id="home" class="panel active">
+<div class="card hello"><div class="chip">TODAY'S NOTE</div><h2>こんにちは！ 🌼</h2><div class="muted">食べることを楽しみながら、今日の食事を残してみよう。</div><button class="btn primary" style="margin-top:12px" onclick="showTab('add')">食事を記録する ＋</button></div>
+<div class="heroGrid"><div class="card"><h3>今日の記録</h3><div class="statgrid"><div class="stat"><b id="mealCount">0</b><span>食事メモ</span></div><div class="stat"><b id="itemCount">0</b><span>メニュー</span></div><div class="stat"><b id="groupCount">0</b><span>カテゴリー</span></div></div><div id="todaySummary" class="muted" style="margin-top:12px">まだ記録がないよ。</div></div>
+<div class="card"><h3>この1週間</h3><div class="week" id="week"></div><p class="hint">記録できた日をふりかえろう。</p></div></div>
+<div class="card"><h3>食事のヒント 🌱</h3><p class="muted">ごはん・パン、野菜、おかず、汁ものなど、いろいろな食べものとの出会いを楽しもう。食べる量や体重を評価するためのアプリではないよ。</p></div>
+</section>
+<section id="add" class="panel">
+<div class="card"><h2>食事を記録しよう 🍓</h2><div class="row"><div><label>日付</label><input type="date" id="date"></div><div><label>食事のタイミング</label><select id="meal"><option>朝ごはん</option><option>昼ごはん</option><option>夜ごはん</option><option>おやつ</option></select></div></div>
+<h3>① カテゴリーから探す</h3><div class="categories" id="categoryGrid"></div>
+<label>② メニューを検索</label><input id="search" placeholder="例：おにぎり、たまご、みそ汁…" autocomplete="off">
+<div class="row" style="margin-top:8px"><div class="hint" id="resultCount">メニューを選んでね</div><button class="btn ghost" id="showAll">すべて表示</button></div>
+<div class="foodgrid" id="foods"></div>
+<div class="result"><b>③ 選んだメニュー・量</b><p class="hint">グラム数を入力すると、登録された目安値から概算するよ。</p><div id="selectedList" class="hint">まだ選ばれていないよ。</div><label>メモ（任意）</label><textarea id="memo" placeholder="例：おばあちゃんが作ってくれたよ"></textarea><button class="btn primary full" onclick="saveEntry()">この内容を記録する</button></div>
+</div>
+<div class="card ai-box"><b>📷 写真から料理を判定</b><p class="hint">AIが写真から料理の候補を探すよ。候補を選んだあと、メニューと量は自分で確認してね。</p><input id="foodPhoto" type="file" accept="image/*" capture="environment"><img id="photoPreview" alt="選んだ写真" class="hidden" style="max-width:100%;max-height:220px;object-fit:contain;border-radius:12px;margin-top:9px"><button class="btn primary full" id="aiAnalyzeBtn">写真をAIで判定する</button><div id="aiStatus" class="hint" role="status" aria-live="polite">初回はネット接続でAIモデルを準備するよ。</div><div id="aiCandidates"></div><p class="hint">料理の種類を推定する機能だよ。食材・グラム数・カロリーを写真だけで正確に判定することはできないよ。</p></div>
+<div class="card"><details><summary style="font-weight:800;cursor:pointer">メニューを自分で追加する ＋</summary><p class="hint">家庭料理など、リストにないメニューを追加できるよ。数値はレシピや食品表示を参考にしてね。</p><label>メニュー名</label><input id="customName" placeholder="例：おうちの野菜カレー"><label>カテゴリー</label><select id="customCategory"><option>ごはん・パン・めん</option><option>汁もの</option><option>おかず</option><option>野菜・副菜</option><option>飲み物</option><option>デザート・おやつ</option></select><div class="row"><div><label>100gあたりの目安(kcal)</label><input id="customKcal" type="number" min="0" max="1000" placeholder="例：140"></div><div><label>ふつうの量(g)</label><input id="customGram" type="number" min="1" max="3000" placeholder="例：250"></div></div><button class="btn primary full" onclick="addCustomFood()">メニューを追加する</button></details></div>
+</section>
+<section id="list" class="panel"><div class="card"><h2>食事の日記 📚</h2><div class="row"><div><label>表示する月</label><input type="month" id="monthFilter"></div><div><label>食事の種類</label><select id="mealFilter"><option value="">すべて</option><option>朝ごはん</option><option>昼ごはん</option><option>夜ごはん</option><option>おやつ</option></select></div></div><div id="entries"></div></div></section>
+<section id="settings" class="panel"><div class="card"><h2>設定 ⚙️</h2><label>ノートの名前</label><input id="titleInput" placeholder="おいしい食事ノート"><button class="btn primary full" onclick="saveTitle()">名前を保存</button><h3>データベース</h3><p class="hint"><b id="dbCount">263</b>件のメニューを収録。カテゴリー、別名検索、100gあたりの目安値、標準的な量を管理しているよ。数値は一般的な目安で、商品・レシピ・調理法によって変わるよ。</p><h3>バックアップ・復元</h3><p class="hint">記録や自分で追加したメニューをJSONファイルに保存できるよ。機種変更やブラウザー変更の前にバックアップしてね。</p><button class="btn full" onclick="exportData()">バックアップを書き出す</button><label>バックアップから復元</label><input type="file" id="importFile" accept="application/json"><button class="btn ghost full" onclick="importData()">バックアップを読み込む</button><h3>プライバシーとAI</h3><p class="hint">食事記録はこのブラウザー内に保存する設計。GitHubには送られないよ。AIモデルは初回に配信元からダウンロードする必要があるよ。写真判定は端末内処理を想定しているけれど、公開前に通信確認と実機テストを行うよ。</p><p class="hint">このノートは医療・栄養指導の代わりではなく、食事を楽しく記録するためのものだよ。</p><button class="btn full" onclick="clearAll()">この端末の記録をすべて消す</button></div></section>
+<footer>目安の数値は正確な計測値ではありません。成長や健康に必要な食事量を制限・評価する目的では使わないでね。</footer>
+</main>
+<script src="./food-db.js"></script><script>
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.warn));
+const $=id=>document.getElementById(id);
+const CATS=[['ごはん・パン・めん','🍚','主食・おにぎり・麺'],['汁もの','🥣','みそ汁・スープ'],['おかず','🍳','肉・魚・卵・豆'],['野菜・副菜','🥦','サラダ・小鉢'],['飲み物','🥛','水・お茶・牛乳'],['デザート・おやつ','🍓','果物・お菓子']];
+let db=(window.FOOD_DB||[]).map(x=>({...x}));
+let custom=JSON.parse(localStorage.getItem('hn9_custom')||'[]');db.push(...custom);
+let selected=[],records=JSON.parse(localStorage.getItem('hn9_records')||'[]'),activeCat='ごはん・パン・めん';
+function localDate(d=new Date()){let y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+$('date').value=localDate();$('monthFilter').value=localDate().slice(0,7);$('dbCount').textContent=db.length;
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));if(id==='home')renderHome();if(id==='list')renderEntries()}
+function renderCats(){$('categoryGrid').innerHTML=CATS.map(([n,e,d])=>`<button class="cat ${activeCat===n?'active':''}" onclick="pickCat('${n}')"><span class="emoji">${e}</span><b>${n}</b><small>${d}</small></button>`).join('')}
+function pickCat(c){activeCat=c;$('search').value='';renderCats();renderFoods()}
+function norm(s){return String(s||'').toLowerCase().replace(/[　\s・（）()]/g,'')}
+function renderFoods(){let q=norm($('search').value),arr=db.filter(f=>(!activeCat||f.category===activeCat)&&(!q||norm(f.name).includes(q)||(f.aliases||[]).some(a=>norm(a).includes(q))));$('resultCount').textContent=`${arr.length}件のメニュー`;if(!arr.length)$('foods').innerHTML='<p class="hint">見つからないときは、別の言葉で検索するかメニューを追加してね。</p>';else $('foods').innerHTML=arr.slice(0,120).map(f=>`<button class="food ${selected.some(x=>x.id===f.id)?'selected':''}" onclick="toggleFood('${f.id}')"><b>${f.name}</b><small>約${f.kcal100} kcal / 100g　・標準 ${f.servingG}g</small></button>`).join('')}
+$('search').addEventListener('input',()=>{if($('search').value.trim())activeCat='';renderCats();renderFoods()});
+$('showAll').onclick=()=>{activeCat='';$('search').value='';renderCats();renderFoods()};
+function toggleFood(id){let f=db.find(x=>x.id===id);if(!f)return;let i=selected.findIndex(x=>x.id===id);if(i>=0)selected.splice(i,1);else selected.push({id,grams:f.servingG});renderFoods();renderSelected()}
+function renderSelected(){$('selectedList').innerHTML=selected.length?selected.map(x=>{let f=db.find(y=>y.id===x.id);return `<div class="selected-row"><div><b>${f.name}</b><small>${f.kcal100} kcal / 100g ・ ${f.serving}</small></div><input type="number" min="1" max="3000" value="${x.grams}" aria-label="${f.name}のグラム数" onchange="setGrams('${x.id}',this.value)"><button class="remove" onclick="removeFood('${x.id}')">×</button></div>`}).join(''):'まだ選ばれていないよ。'}
+function setGrams(id,v){let x=selected.find(x=>x.id===id);if(x)x.grams=Math.max(1,Math.min(3000,Number(v)||1))}
+function removeFood(id){selected=selected.filter(x=>x.id!==id);renderFoods();renderSelected()}
+function saveEntry(){if(!selected.length){alert('メニューを選んでね');return}let items=selected.map(x=>{let f=db.find(y=>y.id===x.id);return {id:f.id,name:f.name,category:f.category,grams:x.grams,kcal100:f.kcal100,estimatedKcal:Math.round(f.kcal100*x.grams/100)}});records.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),date:$('date').value,meal:$('meal').value,items,memo:$('memo').value,createdAt:new Date().toISOString()});persist();selected=[];$('memo').value='';renderSelected();renderFoods();showTab('home')}
+function persist(){localStorage.setItem('hn9_records',JSON.stringify(records));localStorage.setItem('hn9_custom',JSON.stringify(custom))}
+function renderHome(){let today=localDate(),r=records.filter(x=>x.date===today),items=r.flatMap(x=>x.items||[]),groups=new Set(items.map(x=>x.category));$('mealCount').textContent=r.length;$('itemCount').textContent=items.length;$('groupCount').textContent=groups.size;$('todaySummary').textContent=r.length?r.map(x=>x.meal+'：'+x.items.map(i=>i.name).join('・')).join(' ／ '):'まだ記録がないよ。食べたものを記録してみよう。';let days=[];for(let n=6;n>=0;n--){let d=new Date();d.setDate(d.getDate()-n);let k=localDate(d),count=records.filter(x=>x.date===k).length;days.push(`<div class="day"><b>${['日','月','火','水','木','金','土'][d.getDay()]}</b><span>${count?'●':'－'}</span></div>`)}$('week').innerHTML=days.join('')}
+function renderEntries(){let month=$('monthFilter').value,meal=$('mealFilter').value,arr=records.filter(x=>(!month||x.date.startsWith(month))&&(!meal||x.meal===meal));$('entries').innerHTML=arr.length?arr.map(r=>`<div class="entry"><div class="entryhead"><b>${r.date}　${r.meal}</b><button class="remove" onclick="deleteEntry('${r.id}')">削除</button></div><ul>${r.items.map(i=>`<li>${i.name}　${i.grams}g <span class="muted">（目安 ${i.estimatedKcal} kcal）</span></li>`).join('')}</ul>${r.memo?`<div class="hint">メモ：${escapeHtml(r.memo)}</div>`:''}</div>`).join(''):'<p class="hint">この月の記録はまだないよ。</p>'}
+function deleteEntry(id){if(confirm('この記録を削除する？')){records=records.filter(x=>x.id!==id);persist();renderEntries();renderHome()}}
+$('monthFilter').onchange=renderEntries;$('mealFilter').onchange=renderEntries;
+function addCustomFood(){let name=$('customName').value.trim(),k=Number($('customKcal').value),g=Number($('customGram').value),c=$('customCategory').value;if(!name||!Number.isFinite(k)||k<0||k>1000||!Number.isFinite(g)||g<1||g>3000){alert('メニュー名、100gあたりの目安、標準量を入力してね');return}let f={id:'c'+Date.now(),name,category:c,kcal100:k,servingG:g,serving:`標準 ${g}g`,aliases:[],custom:true};custom.push(f);db.push(f);persist();$('customName').value='';$('customKcal').value='';$('customGram').value='';$('dbCount').textContent=db.length;renderFoods();alert('メニューを追加したよ！')}
+function saveTitle(){let t=$('titleInput').value.trim();if(t){localStorage.setItem('hn9_title',t);$('appTitle').textContent=t+' 🌷'}}
+let title=localStorage.getItem('hn9_title');if(title){$('appTitle').textContent=title+' 🌷';$('titleInput').value=title}
+function exportData(){let data={app:'health-note-app',version:9,exportedAt:new Date().toISOString(),records,customFoods:custom,title:localStorage.getItem('hn9_title')||''};let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=u;a.download='health-note-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function importData(){let file=$('importFile').files[0];if(!file){alert('バックアップファイルを選んでね');return}let reader=new FileReader();reader.onload=()=>{try{let d=JSON.parse(reader.result);if(!Array.isArray(d.records)||!Array.isArray(d.customFoods))throw Error();if(!confirm('現在の記録と追加メニューをバックアップ内容で置き換える？'))return;records=d.records;custom=d.customFoods;db=(window.FOOD_DB||[]).map(x=>({...x})).concat(custom);if(d.title){localStorage.setItem('hn9_title',d.title);$('appTitle').textContent=d.title+' 🌷'}persist();$('dbCount').textContent=db.length;renderHome();renderEntries();alert('復元したよ！')}catch(e){alert('このファイルは読み込めないみたい。正しいバックアップか確認してね。')}};reader.readAsText(file)}
+function clearAll(){if(confirm('このブラウザーに保存した記録と追加メニューをすべて削除する？')){records=[];custom=[];db=(window.FOOD_DB||[]).map(x=>({...x}));persist();$('dbCount').textContent=db.length;renderHome();renderEntries();alert('記録を削除したよ。')}}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+window.useAiFood=function(name){$('search').value=name;activeCat='';renderCats();renderFoods();$('foods').scrollIntoView({behavior:'smooth',block:'start'});$('aiStatus').textContent='AI候補を検索欄に入れたよ。メニューを選び、量を確認してね。'}
+renderCats();renderFoods();renderSelected();renderHome();
+</script><script type="module" src="./ai.js"></script>
+</body></html>
