@@ -37,7 +37,9 @@ function normalizeCustom(f) {
 let custom = store.get(K.custom, []).map(normalizeCustom);
 let db = [];
 function rebuildDb() {
-  db = (window.FOOD_DB || []).concat(custom);
+  // 古いfood-db.js（100gあたり形式）が読み込まれても計算できるように変換
+  db = (window.FOOD_DB || []).map(f => f.kcal == null ? { ...normalizeCustom(f), custom: false } : f).concat(custom);
+  if (!window.KANJI_MAP) console.warn("food-db.jsが古い版です");
   FoodSearch.setKanjiMap(window.KANJI_MAP || {});
   FoodSearch.buildIndex(db);
   $("dbCount").textContent = db.length;
