@@ -1,5 +1,5 @@
 "use strict";
-/* おいしい食事ノート v10 */
+/* ここねの毎日健康ノート v10 */
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.warn));
 }
@@ -45,6 +45,7 @@ function rebuildDb() {
   $("dbCount").textContent = db.length;
 }
 let records = store.get(K.records, []);
+if (records.some(r => !r.id)) { records.forEach((r, i) => { if (!r.id) r.id = "r" + Date.now() + "-" + i; }); store.set(K.records, records); }
 let weights = store.get(K.weights, []);
 let kyuImported = store.get(K.kyu, {});
 let kyuEat = store.get(K.kyuEat, {});
@@ -264,7 +265,7 @@ function renderHome() {
   } else $("kyuToday").classList.add("hidden");
   const order = MEALS.map(m => m[0]);
   const sorted = arr.filter(r => !r.kyushoku).sort((a, b) => order.indexOf(a.meal) - order.indexOf(b.meal));
-  $("todayList").innerHTML = sorted.length || kyu ? sorted.map(r => `<div class="meal-line"><span><b>${esc(r.meal)}</b>　${esc(r.items.map(i => i.name).join("・"))}</span><span class="k">${recKcal(r)}kcal</span></div>`).join("") + (kyu ? `<div class="meal-line"><span><b>給食</b>　${esc(kyu.menu.join("・"))}</span><span class="k">${kyu.estimatedKcal}kcal</span></div>` : "") : "まだ記録がないよ。食べたものを記録してみよう。";
+  $("todayList").innerHTML = sorted.length || kyu ? sorted.map(r => `<div class="meal-line"><span><b>${esc(r.meal)}</b>　${esc(r.items.map(i => i.name).join("・"))}</span><span class="k">${recKcal(r)}kcal <button class="remove" data-del="${esc(r.id)}" aria-label="${esc(r.meal)}の記録を削除">削除</button></span></div>`).join("") + (kyu ? `<div class="meal-line"><span><b>給食</b>　${esc(kyu.menu.join("・"))}</span><span class="k">${kyu.estimatedKcal}kcal</span></div>` : "") : "まだ記録がないよ。食べたものを記録してみよう。";
   const wd = new Set(weights.map(w => w.date)); let days = "";
   for (let n = 6; n >= 0; n--) { const k = addDays(today, -n), d = parseDate(k); const food = records.some(r => r.date === k); days += `<div class="day"><b>${WD[d.getDay()]}</b><span>${food ? "🍙" : "・"}${wd.has(k) ? "<br>⚖️" : ""}</span></div>`; }
   $("week").innerHTML = days;
@@ -287,7 +288,19 @@ function renderEntries() {
   }
   $("entries").innerHTML = html || '<p class="hint">この月の記録はまだないよ。</p>';
 }
-$("entries").addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (b && confirm("この記録を削除する？")) { records = records.filter(x => x.id !== b.dataset.del); persist(); renderEntries(); } });
+// 削除は「1回目：確認表示 → 2回目：削除」。端末の確認ダイアログが出ない環境でも消せるようにする
+function armDelete(b) {
+  if (b.dataset.armed === "1") return true;
+  document.querySelectorAll('[data-armed="1"]').forEach(x => { x.dataset.armed = ""; x.textContent = "削除"; x.style.background = ""; x.style.color = ""; });
+  b.dataset.armed = "1"; b.textContent = "本当に消す？"; b.style.background = "#d96f98"; b.style.color = "#fff";
+  setTimeout(() => { if (b.isConnected && b.dataset.armed === "1") { b.dataset.armed = ""; b.textContent = "削除"; b.style.background = ""; b.style.color = ""; } }, 4000);
+  return false;
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-del]"); if (!b || !armDelete(b)) return;
+  records = records.filter(x => x.id !== b.dataset.del); persist(); toast("記録を削除したよ");
+  renderHome(); if ($("list").classList.contains("active")) renderEntries(); if ($("add").classList.contains("active")) renderQuick();
+});
 $("monthFilter").addEventListener("change", renderEntries); $("mealFilter").addEventListener("change", renderEntries);
 
 /* ---------- 体重 ---------- */
@@ -351,7 +364,7 @@ function renderWeight(keepComment) {
   drawChart(s);
 }
 $("wtRange").addEventListener("click", e => { const b = e.target.closest("[data-wr]"); if (b) { wtRange = Number(b.dataset.wr); renderWeight(true); } });
-$("wtHistory").addEventListener("click", e => { const b = e.target.closest("[data-wdel]"); if (b && confirm(fmtDate(b.dataset.wdel) + "の体重を削除する？")) { weights = weights.filter(w => w.date !== b.dataset.wdel); store.set(K.weights, weights); renderWeight(true); } });
+$("wtHistory").addEventListener("click", e => { const b = e.target.closest("[data-wdel]"); if (b && armDelete(b)) { weights = weights.filter(w => w.date !== b.dataset.wdel); store.set(K.weights, weights); renderWeight(true); } });
 function drawChart(s) {
   const el = $("wtChart");
   if (s.length < 1) { el.innerHTML = '<p class="hint" style="text-align:center;padding:30px 0">記録するとグラフがここに出るよ 📈</p>'; return; }

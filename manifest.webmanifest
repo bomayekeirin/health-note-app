@@ -1,6 +1,6 @@
 {
-  "name": "おいしい食事ノート",
-  "short_name": "食事ノート",
+  "name": "ここねの毎日健康ノート",
+  "short_name": "ここねの毎日健康ノート",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

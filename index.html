@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#fff0f5"><meta name="description" content="食べたものと体重を楽しく記録する、やさしい食事ノート">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon-192.svg" type="image/svg+xml">
-<title>おいしい食事ノート</title>
+<title>ここねの毎日健康ノート</title><meta name="apple-mobile-web-app-title" content="ここねの毎日健康ノート">
 <style>
 :root{--pink:#f4a9c4;--pink-dark:#d96f98;--pink-pale:#fff0f5;--cream:#fffaf1;--mint:#e8f5ed;--mint-dark:#5d8870;--lav:#f1edff;--ink:#514653;--muted:#8d808a;--line:#f0dce5;--white:#fff;--shadow:0 8px 24px #8d53600d}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
@@ -96,7 +96,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:20px 10px;lin
 </style>
 </head>
 <body>
-<header><div class="brand">MY LITTLE FOOD DIARY</div><div class="logo" id="appTitle">おいしい食事ノート 🌷</div></header>
+<header><div class="brand">MY LITTLE FOOD DIARY</div><div class="logo" id="appTitle">ここねの毎日健康ノート 🌷</div></header>
 <main>
 <nav>
 <button class="active" data-tab="home"><span>🏠</span>ホーム</button>
@@ -154,7 +154,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:20px 10px;lin
 <section id="list" class="panel"><div class="card"><h2>食事の日記 📚</h2><div class="row"><div><label>表示する月</label><input type="month" id="monthFilter"></div><div><label>食事の種類</label><select id="mealFilter"><option value="">すべて</option><option>朝ごはん</option><option>昼ごはん</option><option>夜ごはん</option><option>おやつ</option></select></div></div><div id="entries"></div></div></section>
 
 <section id="settings" class="panel"><div class="card"><h2>設定 ⚙️</h2>
-<label>ノートの名前</label><input id="titleInput" placeholder="おいしい食事ノート"><button class="btn primary full" id="saveTitle">名前を保存</button>
+<label>ノートの名前</label><input id="titleInput" placeholder="ここねの毎日健康ノート"><button class="btn primary full" id="saveTitle">名前を保存</button>
 <h3>🍱 給食の献立</h3><p class="hint" id="kyuStatus">給食データはまだないよ。</p>
 <label>給食データを読み込む（.json）</label><input type="file" id="kyuFile" accept="application/json,.json"><button class="btn ghost full" id="kyuImport">給食データを読み込む</button>
 <h3>メニューデータ</h3><p class="hint"><b id="dbCount">0</b>件のメニューを収録。ひらがな・カタカナ・漢字、少しの打ちまちがいでも探せるよ。カロリーは一般的な1人前の目安で、商品やレシピによって変わるよ。</p>
@@ -169,11 +169,11 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:20px 10px;lin
 <canvas id="confetti"></canvas>
 <div class="pop" id="pop"><div class="e">🎉</div><div class="t">きろくできた！</div></div>
 <div class="toast" id="toast"></div>
-<script src="./food-db.js?v=10d"></script>
-<script src="./kyushoku.js?v=10d"></script>
-<script src="./search.js?v=10d"></script>
-<script src="./app.js?v=10d"></script>
-<script src="./fortune-data.js?v=10d"></script>
-<script src="./fortune.js?v=10d"></script>
-<script type="module" src="./ai.js?v=10d"></script>
+<script src="./food-db.js?v=10e"></script>
+<script src="./kyushoku.js?v=10e"></script>
+<script src="./search.js?v=10e"></script>
+<script src="./app.js?v=10e"></script>
+<script src="./fortune-data.js?v=10e"></script>
+<script src="./fortune.js?v=10e"></script>
+<script type="module" src="./ai.js?v=10e"></script>
 </body></html>
