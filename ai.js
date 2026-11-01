@@ -111,7 +111,7 @@ button?.addEventListener("click", async () => {
     candidatesEl.innerHTML = "<strong>AIの候補（近い順）</strong>" + result.map((r, i) => {
       const jp = jaLabels[r.label] || r.label.replaceAll("_", " ");
       const pct = Math.round((r.score || 0) * 100);
-      return `<button class="aiCandidate" type="button" data-label="${escapeHtml(r.label)}"><span><b>${i+1}. ${escapeHtml(jp)}</b><br><small>${escapeHtml(r.label)}</small></span><strong>${pct}%</strong></button>`;
+      return `<button class="candidate" type="button" data-label="${escapeHtml(r.label)}"><span><b>${i+1}. ${escapeHtml(jp)}</b><br><small>${escapeHtml(r.label)}</small></span><strong>${pct}%</strong></button>`;
     }).join("");
     candidatesEl.querySelectorAll("button[data-label]").forEach(b => {
       b.addEventListener("click", () => window.chooseFoodAiCandidate(b.dataset.label));
