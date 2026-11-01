@@ -1,7 +1,7 @@
 // v10: アプリ本体はネット優先（更新がすぐ反映される）、オフライン時はキャッシュを使う
-const CACHE_NAME = "health-note-shell-v10b";
+const CACHE_NAME = "health-note-shell-v10d";
 const CDN_CACHE = "health-note-ai-cdn-v9";
-const SHELL = ["./", "./index.html", "./app.js", "./search.js", "./food-db.js", "./kyushoku.js", "./ai.js", "./manifest.webmanifest", "./icon-192.svg", "./icon-512.svg"];
+const SHELL = ["./", "./index.html", "./app.js", "./search.js", "./food-db.js", "./kyushoku.js", "./ai.js", "./fortune.js", "./fortune-data.js", "./manifest.webmanifest", "./icon-192.svg", "./icon-512.svg"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith("health-note-") && k !== CACHE_NAME && k !== CDN_CACHE).map(k => caches.delete(k)))));
